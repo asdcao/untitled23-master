@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_mjpeg/flutter_mjpeg.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -76,32 +77,38 @@ class LiveStreamScreen extends HookWidget {
   Widget build(BuildContext context) {
     final isRunning = useState(true);
 
+    useEffect(() {
+      // 设置屏幕为横屏，并隐藏系统UI
+      SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeRight, DeviceOrientation.landscapeLeft]);
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
+      // 返回时恢复为竖屏并显示系统UI
+      return () {
+        SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+      };
+    }, []);
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text('实时画面 - $deviceId'),
-      ),
-      body: Column(
-        children: <Widget>[
-          ElevatedButton(
-            onPressed: () {
-              isRunning.value = !isRunning.value;
+      body: Center(
+        child: AspectRatio(
+          aspectRatio: 16 / 9,
+          child: Mjpeg(
+            isLive: isRunning.value,
+            error: (context, error, stack) {
+              print(error);
+              print(stack);
+              return Text(error.toString(), style: TextStyle(color: Colors.red));
             },
-            child: Text('Toggle'),
+            stream: 'http://192.168.1.101:8000/videostream/stream/$deviceId/',
           ),
-          Expanded(
-            child: Center(
-              child: Mjpeg(
-                isLive: isRunning.value,
-                error: (context, error, stack) {
-                  print(error);
-                  print(stack);
-                  return Text(error.toString(), style: TextStyle(color: Colors.red));
-                },
-                stream: 'http://192.168.1.101:8000/videostream/stream/$deviceId/',
-              ),
-            ),
-          ),
-        ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          isRunning.value = !isRunning.value;
+        },
+        child: Icon(isRunning.value ? Icons.pause : Icons.play_arrow),
       ),
     );
   }

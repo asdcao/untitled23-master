@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:untitled/CategoryPage.dart';
-import 'package:untitled/RestaurantPage.dart';
-
 
 class DeliverFoodPage extends StatelessWidget {
   @override
@@ -188,6 +186,58 @@ class DeliverFoodPage extends StatelessWidget {
   }
 }
 
+class RestaurantPage extends StatelessWidget {
+  final Restaurant restaurant;
+
+  RestaurantPage({required this.restaurant});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(restaurant.name),
+      ),
+      body: ListView.builder(
+        itemCount: recommendedDishes.length, // Replace with actual dishes of the restaurant
+        itemBuilder: (context, index) {
+          return _buildDishCard(context, recommendedDishes[index]);
+        },
+      ),
+    );
+  }
+
+  Widget _buildDishCard(BuildContext context, Dish dish) {
+    return Card(
+      margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: ListTile(
+        leading: Image.asset(
+          dish.imageUrl,
+          width: 50,
+          height: 50,
+          fit: BoxFit.cover,
+        ),
+        title: Text(dish.name),
+        subtitle: Text(dish.description),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('¥${dish.price.toString()}'),
+            IconButton(
+              icon: Icon(Icons.add_shopping_cart),
+              onPressed: () {
+                cart.add(dish);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('${dish.name} 已添加到购物车')),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class Restaurant {
   final String imageUrl;
   final String name;
@@ -234,24 +284,24 @@ final Cart cart = Cart();
 
 // 示例数据
 final List<Restaurant> restaurantList = [
-  Restaurant(imageUrl: 'assets/store1.png', name: '老王烧烤'),
-  Restaurant(imageUrl: 'assets/store2.png', name: '小李火锅'),
-  Restaurant(imageUrl: 'assets/store1.png', name: '张三快餐'),
-  Restaurant(imageUrl: 'assets/store2.png', name: '肥猫快餐'),
+  Restaurant(imageUrl: 'assets/store3.webp', name: '健康餐厅1'),
+  Restaurant(imageUrl: 'assets/store3.webp', name: '健康餐厅2'),
+  Restaurant(imageUrl: 'assets/store3.webp', name: '健康餐厅3'),
+  Restaurant(imageUrl: 'assets/store3.webp', name: '健康餐厅4'),
 ];
 
 final List<FoodCategory> foodCategories = [
-  FoodCategory(imageUrl: 'assets/food1.png', name: '快餐'),
-  FoodCategory(imageUrl: 'assets/food2.png', name: '烧烤'),
-  FoodCategory(imageUrl: 'assets/food3.png', name: '火锅'),
-  FoodCategory(imageUrl: 'assets/food4.png', name: '甜品'),
+  FoodCategory(imageUrl: 'assets/food1.webp', name: '低盐菜'),
+  FoodCategory(imageUrl: 'assets/food2.webp', name: '低糖菜'),
+  FoodCategory(imageUrl: 'assets/food1.webp', name: '高纤维菜'),
+  FoodCategory(imageUrl: 'assets/food2.webp', name: '高蛋白菜'),
 ];
 
 final List<Dish> recommendedDishes = [
-  Dish(imageUrl: 'assets/food1.png', name: '宫保鸡丁', description: '经典川菜', price: 28.0),
-  Dish(imageUrl: 'assets/food2.png', name: '红烧肉', description: '美味佳肴', price: 35.0),
-  Dish(imageUrl: 'assets/food1.png', name: '麻婆豆腐', description: '麻辣鲜香', price: 22.0),
-  Dish(imageUrl: 'assets/food2.png', name: '酸辣汤', description: '开胃汤品', price: 18.0),
+  Dish(imageUrl: 'assets/dish1.webp', name: '蒸蛋', description: '软嫩可口', price: 10.0),
+  Dish(imageUrl: 'assets/dish2.webp', name: '清蒸鱼', description: '营养丰富', price: 25.0),
+  Dish(imageUrl: 'assets/dish3.webp', name: '银耳羹', description: '润肺养颜', price: 15.0),
+  Dish(imageUrl: 'assets/dish4.webp', name: '红枣粥', description: '滋补养生', price: 12.0),
 ];
 
 class CartPage extends StatelessWidget {

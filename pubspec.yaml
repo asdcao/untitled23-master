@@ -99,6 +99,15 @@ flutter:
     - assets/food4.png
     - assets/store1.png
     - assets/store2.png
+    - assets/store3.webp
+    - assets/food1.webp
+    - assets/food2.webp
+    - assets/food3.webp
+    - assets/food4.webp
+    - assets/dish1.webp
+    - assets/dish2.webp
+    - assets/dish3.webp
+    - assets/dish4.webp
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
