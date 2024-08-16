@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'health_report_page.dart';
+import 'package:dio/dio.dart';
+import 'package:untitled/health_report_page.dart';
 
 class HealthStatusPage extends StatefulWidget {
   @override
@@ -7,33 +8,25 @@ class HealthStatusPage extends StatefulWidget {
 }
 
 class _HealthStatusPageState extends State<HealthStatusPage> {
+  List<dynamic> elderInfo = [];
   int currentIndex = 0;
 
-  final List<Map<String, dynamic>> elderInfo = [
-    {
-      'name': '刘秀英',
-      'age': '63岁',
-      'height': '156cm',
-      'weight': '50kg',
-      'profileImage': 'assets/profile_picture.jpg',
-      'stepCount': '2139步',
-      'bloodPressure': '145/67mmHg',
-      'heartRate': '76次/分',
-      'sleepDuration': '7小时36分',
-    },
-    {
-      'name': '张三',
-      'age': '70岁',
-      'height': '165cm',
-      'weight': '60kg',
-      'profileImage': 'assets/profile_picture2.jpg',
-      'stepCount': '1540步',
-      'bloodPressure': '130/80mmHg',
-      'heartRate': '72次/分',
-      'sleepDuration': '8小时10分',
-    },
-    // Add more elders here
-  ];
+  @override
+  void initState() {
+    super.initState();
+    fetchElders();
+  }
+
+  void fetchElders() async {
+    try {
+      var response = await Dio().get('http://192.168.1.101:8001/elders');
+      setState(() {
+        elderInfo = response.data;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 
   void _switchElder() {
     setState(() {
@@ -43,6 +36,17 @@ class _HealthStatusPageState extends State<HealthStatusPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (elderInfo.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('健康数据'),
+        ),
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     final elder = elderInfo[currentIndex];
 
     return Scaffold(
@@ -57,15 +61,15 @@ class _HealthStatusPageState extends State<HealthStatusPage> {
             Card(
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: AssetImage(elder['profileImage']),
+                  backgroundImage: NetworkImage(elder['profile_image_url']),
                 ),
                 title: Text(elder['name']),
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('${elder['age']} 年龄'),
-                    Text('${elder['height']} 身高'),
-                    Text('${elder['weight']} 体重'),
+                    Text('${elder['age']} 岁'),
+                    Text('${elder['height']} cm'),
+                    Text('${elder['weight']} kg'),
                   ],
                 ),
                 trailing: IconButton(
@@ -84,10 +88,10 @@ class _HealthStatusPageState extends State<HealthStatusPage> {
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 children: [
-                  _buildStatusCard('步数', elder['stepCount'], Icons.directions_walk, Colors.blue),
-                  _buildStatusCard('血压', elder['bloodPressure'], Icons.favorite, Colors.red),
-                  _buildStatusCard('心率', elder['heartRate'], Icons.favorite, Colors.orange),
-                  _buildStatusCard('睡眠', elder['sleepDuration'], Icons.bed, Colors.purple),
+                  _buildStatusCard('步数', '${elder['step_count']} 步', Icons.directions_walk, Colors.blue),
+                  _buildStatusCard('血压', '${elder['blood_pressure']} mmHg', Icons.favorite, Colors.red),
+                  _buildStatusCard('心率', '${elder['heart_rate']} 次/分', Icons.favorite, Colors.orange),
+                  _buildStatusCard('睡眠', '${elder['sleep_duration']} 小时', Icons.bed, Colors.purple),
                 ],
               ),
             ),

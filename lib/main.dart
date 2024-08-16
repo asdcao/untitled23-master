@@ -64,41 +64,41 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('智慧养老'),
+        title: Text('智慧养老', style: TextStyle(fontSize: 22)), // 增大标题字号
         centerTitle: true,
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text(
-                '侧边栏',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              title: Text('选项1'),
-              onTap: () {
-                // 处理选项1的点击事件
-              },
-            ),
-            ListTile(
-              title: Text('选项2'),
-              onTap: () {
-                // 处理选项2的点击事件
-              },
-            ),
-            // 添加更多的侧边栏选项...
-          ],
-        ),
-      ),
+      // drawer: Drawer(
+      //   child: ListView(
+      //     padding: EdgeInsets.zero,
+      //     children: <Widget>[
+      //       DrawerHeader(
+      //         decoration: BoxDecoration(
+      //           color: Colors.blue,
+      //         ),
+      //         child: Text(
+      //           '侧边栏',
+      //           style: TextStyle(
+      //             color: Colors.white,
+      //             fontSize: 24,
+      //           ),
+      //         ),
+      //       ),
+      //       ListTile(
+      //         title: Text('选项1', style: TextStyle(fontSize: 18)), // 增大侧边栏选项字号
+      //         onTap: () {
+      //           // 处理选项1的点击事件
+      //         },
+      //       ),
+      //       ListTile(
+      //         title: Text('选项2', style: TextStyle(fontSize: 18)), // 增大侧边栏选项字号
+      //         onTap: () {
+      //           // 处理选项2的点击事件
+      //         },
+      //       ),
+      //       // 添加更多的侧边栏选项...
+      //     ],
+      //   ),
+      // ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -179,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(height: 30),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('医养服务', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            child: Text('医养服务', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)), // 增大段落标题字号
           ),
           SizedBox(height: 5),
           Padding(
@@ -200,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('健康文章推送', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            child: Text('健康文章推送', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)), // 增大段落标题字号
           ),
           SizedBox(height: 10),
           _selectedArticle != null ? _buildHealthArticleCard(_selectedArticle!) : Container(),
@@ -239,14 +239,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             Text(
                               healthArticles[index].title,
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), // 增大文章标题字号
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                             SizedBox(height: 4),
                             Text(
                               healthArticles[index].content,
-                              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                              style: TextStyle(fontSize: 16, color: Colors.grey[600]), // 增大文章内容字号
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -287,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         SizedBox(height: 8),
-        Text(label, style: TextStyle(fontSize: 10)),
+        Text(label, style: TextStyle(fontSize: 14)), // 增大按钮标签字号
       ],
     );
   }
@@ -318,7 +318,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         SizedBox(height: 8),
-        Text(label, style: TextStyle(fontSize: 10)),
+        Text(label, style: TextStyle(fontSize: 12)), // 增大服务按钮标签字号
       ],
     );
   }
@@ -348,12 +348,12 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Text(
                   article.title,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), // 增大文章卡片标题字号
                 ),
                 SizedBox(height: 4),
                 Text(
                   article.content,
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]), // 增大文章卡片内容字号
                 ),
               ],
             ),

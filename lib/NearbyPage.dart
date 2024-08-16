@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'hospital_detail_page.dart';
 
 void main() => runApp(MyApp());
@@ -18,31 +20,30 @@ class NearbyPage extends StatefulWidget {
 }
 
 class _NearbyPageState extends State<NearbyPage> {
-  List<Hospital> hospitals = [
-    Hospital(
-      name: "曹妃甸新城医院",
-      rating: 9.5,
-      distance: 8.9,
-      address: "曹妃甸区知行路",
-      imageUrl: 'assets/hospital_image1.jpg',
-    ),
-    Hospital(
-      name: "曹妃甸区一农场医院",
-      rating: 9.7,
-      distance: 1.4,
-      address: "曹妃甸区滨海街与康源路交叉口南60米",
-      imageUrl: 'assets/hospital_image2.jpg',
-    ),
-    Hospital(
-      name: "河北唐山曹妃甸区医院",
-      rating: 9.5,
-      distance: 3.2,
-      address: "曹妃甸区知",
-      imageUrl: 'assets/hospital_image3.jpg',
-    ),
-  ];
-
+  List<Hospital> hospitals = [];
   String _selectedSort = '按评分排序';
+  bool isLoading = true;  // 添加一个加载状态
+
+  @override
+  void initState() {
+    super.initState();
+    fetchHospitals();
+  }
+
+  Future<void> fetchHospitals() async {
+    final response = await http.get(Uri.parse('http://192.168.1.101:8001/hospitals/'));
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = jsonDecode(response.body);
+      setState(() {
+        hospitals = data.map((json) => Hospital.fromJson(json)).toList();
+        _sortHospitals();
+        isLoading = false;  // 数据加载完成
+      });
+    } else {
+      throw Exception('Failed to load hospitals');
+    }
+  }
 
   void _sortHospitals() {
     setState(() {
@@ -61,7 +62,7 @@ class _NearbyPageState extends State<NearbyPage> {
         title: Text('预约挂号'),
         backgroundColor: Colors.blue,
       ),
-      body: Column(
+      body: isLoading ? Center(child: CircularProgressIndicator()) : Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -170,4 +171,14 @@ class Hospital {
     required this.address,
     required this.imageUrl,
   });
+
+  factory Hospital.fromJson(Map<String, dynamic> json) {
+    return Hospital(
+      name: json['name'],
+      rating: json['rating'],
+      distance: json['distance'],
+      address: json['address'],
+      imageUrl: json['image_url'],
+    );
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
 
 class UrgenttackleScreen extends StatefulWidget {
   @override
@@ -6,28 +7,27 @@ class UrgenttackleScreen extends StatefulWidget {
 }
 
 class _UrgenttackleScreenState extends State<UrgenttackleScreen> {
-  List<Map<String, dynamic>> emergencyRecords = [
-    {
-      'time': '2024-07-09 14:30',
-      'type': '跌倒',
-      'location': '家中客厅',
-      'description': '老人跌倒在客厅地板',
-      'status': '未处理',
-      'details': '老人跌倒在客厅地板，摔伤腿部。心率 120 bpm，血压 140/90 mmHg。已联系120急救中心，正在送医。'
-    },
-    {
-      'time': '2024-07-08 10:15',
-      'type': '心率异常',
-      'location': '公园散步',
-      'description': '心率突然升高',
-      'status': '已处理',
-      'details': '心率突然升高，经过休息后恢复正常。建议定期检查心脏健康。'
-    },
-  ];
-
+  List<Map<String, dynamic>> emergencyRecords = [];
   String _searchText = '';
   String _selectedType = '所有类型';
   String _selectedStatus = '所有状态';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchEmergencyRecords();
+  }
+
+  void fetchEmergencyRecords() async {
+    try {
+      var response = await Dio().get('http://192.168.1.101:8001/emergency_records/');
+      setState(() {
+        emergencyRecords = List<Map<String, dynamic>>.from(response.data);
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
